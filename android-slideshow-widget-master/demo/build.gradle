@@ -1,0 +1,48 @@
+apply plugin: 'android'
+
+ext.signingProperties = getSigningProperties()
+
+android {
+    compileSdkVersion 19
+    buildToolsVersion "19.1.0"
+
+    signingConfigs {
+        release {
+            if (signingProperties['canSignRelease']) {
+                storeFile file(signingProperties['storeFile'])
+                storePassword signingProperties['storePassword']
+                keyAlias signingProperties['keyAlias']
+                keyPassword signingProperties['keyPassword']
+            }
+        }
+    }
+
+    defaultConfig {
+        packageName "com.marvinlabs.widget.slideshow.demo"
+        minSdkVersion 14
+        targetSdkVersion 19
+        versionCode getAppVersionCode()
+        versionName getAppVersionName()
+    }
+
+    buildTypes {
+        release {
+            runProguard true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+            signingConfig signingConfigs.release
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    compile project(':library')
+    compile project(':plugin-picasso')
+
+    compile 'com.android.support:appcompat-v7:19.1.0'
+
+    compile 'com.squareup.okhttp:okhttp:2.0.+'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.0.+'
+    compile 'com.squareup.picasso:picasso:2.3.+'
+}
